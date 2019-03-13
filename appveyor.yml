@@ -1,0 +1,30 @@
+image:
+- Visual Studio 2017
+install:
+- cmd: appveyor DownloadFile https://github.com/KhronosGroup/OpenCL-Headers/archive/master.zip
+- cmd: 7z x master.zip
+- cmd: rmdir inc /s /q
+- cmd: ren OpenCL-Headers-master inc
+- cmd: call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat" x86
+- cmd: set BUILD_DIR=build
+- cmd: set BIN_DIR=bin
+- cmd: mkdir %BUILD_DIR%
+- cmd: cd %BUILD_DIR%
+build_script:
+- cmd: cmake -G "Visual Studio 15 2017" ..
+- cmd: msbuild OpenCL.vcxproj /p:Configuration=Release /p:Platform=win32 /m /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
+- cmd: cd ..
+after_build:
+- cmd: 7z a OpenCL_win32.zip .\build\Release\* .\build\bin\Release\* .\inc\*
+artifacts:
+  - path: OpenCL_win32.zip
+    name: OpenCL_win32_zip
+deploy:
+  - provider: GitHub
+    artifact: OpenCL_win32.zip
+    auth_token:
+      secure: cDBBHS9pbSEEe+Dt/kGjHCrSPqaTQuZsrvFETud2tfVwTTnm7JneWQLB1n6Z+L6/
+    on:
+      appveyor_repo_tag: true
+
+
