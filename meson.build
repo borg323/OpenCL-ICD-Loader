@@ -12,6 +12,7 @@ deps = []
 opencl_icd_loader_sources = ['loader/icd.c', 'loader/icd_dispatch.c']
 
 if host_machine.system() == 'windows'
+  deps += cc.find_library('Cfgmgr32')
   opencl_icd_loader_sources += ['loader/windows/icd_windows.c',
                                 'loader/windows/icd_windows_hkr.c']
 else
