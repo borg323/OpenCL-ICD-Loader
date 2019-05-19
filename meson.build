@@ -16,7 +16,9 @@ if host_machine.system() == 'windows'
   opencl_icd_loader_sources += ['loader/windows/icd_windows.c',
                                 'loader/windows/icd_windows_hkr.c']
 else
-  deps += [cc.find_library('pthread'), cc.find_library('dl')]
+  if host_machine.system() != 'android'
+    deps += [cc.find_library('pthread'), cc.find_library('dl')]
+  endif
   opencl_icd_loader_sources += 'loader/linux/icd_linux.c'
 endif
 
