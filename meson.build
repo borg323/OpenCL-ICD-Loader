@@ -11,12 +11,19 @@ opencl_icd_loader_sources = ['loader/icd.c', 'loader/icd_dispatch.c']
 if host_machine.system() == 'windows'
   deps += cc.find_library('Cfgmgr32')
   opencl_icd_loader_sources += ['loader/windows/icd_windows.c',
+                                'loader/windows/icd_windows_envvars.c',
+                                'loader/windows/icd_windows_dxgk.c',
                                 'loader/windows/icd_windows_hkr.c']
 else
-  if host_machine.system() != 'android'
-    deps += [cc.find_library('pthread'), cc.find_library('dl')]
+  if cc.has_function('secure_getenv')
+    add_project_arguments('-DHAVE_SECURE_GETENV', language : 'c')
+  elif cc.has_function('__secure_getenv')
+    add_project_arguments('-DHAVE___SECURE_GETENV', language : 'c')
   endif
-  opencl_icd_loader_sources += 'loader/linux/icd_linux.c'
+  run_command('touch', 'icd_cmake_config.h')
+  deps +=  dependency('threads')
+  opencl_icd_loader_sources += ['loader/linux/icd_linux.c',
+                                'loader/linux/icd_linux_envvars.c']
 endif
 
 opencl_headers = include_directories('include')
