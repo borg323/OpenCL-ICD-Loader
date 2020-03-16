@@ -38,6 +38,40 @@ static pthread_once_t initialized = PTHREAD_ONCE_INIT;
 // go through the list of vendors in the two configuration files
 void khrIcdOsVendorsEnumerate(void)
 {
+#ifdef __ANDROID__
+    FILE *fin = NULL;
+    char* fileName = NULL;
+    fileName = "/system/vendor/lib/libOpenCL.so";
+    if ((fin = fopen(fileName, "r")))
+    {
+        fclose(fin);
+        khrIcdVendorAdd(fileName);
+    }
+    fileName = "/system/lib/libOpenCL.so";
+    if ((fin = fopen(fileName, "r")))
+    {
+        fclose(fin);
+        khrIcdVendorAdd(fileName);
+    }
+    fileName = "/system/vendor/lib/egl/libGLES_mali.so";
+    if ((fin = fopen(fileName, "r")))
+    {
+        fclose(fin);
+        khrIcdVendorAdd(fileName);
+    }
+    fileName = "/system/lib/egl/libGLES_mali.so";
+    if ((fin = fopen(fileName, "r")))
+    {
+        fclose(fin);
+        khrIcdVendorAdd(fileName);
+    }
+    fileName = "/system/vendor/lib/libPVROCL.so";
+    if ((fin = fopen(fileName, "r")))
+    {
+        fclose(fin);
+        khrIcdVendorAdd(fileName);
+    }
+#else
     DIR *dir = NULL;
     struct dirent *dirEntry = NULL;
     char* vendorPath = ICD_VENDOR_PATH;
@@ -141,6 +175,7 @@ void khrIcdOsVendorsEnumerate(void)
     {
         khrIcd_free_getenv(envPath);
     }
+#endif
 }
 
 // go through the list of vendors only once
