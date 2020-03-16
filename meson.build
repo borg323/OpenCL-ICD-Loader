@@ -4,9 +4,6 @@ cc = meson.get_compiler('c')
 
 add_project_arguments('-DCL_TARGET_OPENCL_VERSION=220', language : 'c')
 
-run_command('git', 'clone', '--depth=1',
-            'https://github.com/KhronosGroup/OpenCL-Headers.git',
-            'include')
 deps = []
 
 opencl_icd_loader_sources = ['loader/icd.c', 'loader/icd_dispatch.c']
