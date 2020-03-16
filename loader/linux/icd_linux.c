@@ -41,12 +41,17 @@ void khrIcdOsVendorsEnumerate(void)
 #ifdef __ANDROID__
     FILE *fin = NULL;
     char* fileName = NULL;
+#ifdef __aarch64__
+    fileName = "/system/vendor/lib64/libOpenCL.so";
+#else
     fileName = "/system/vendor/lib/libOpenCL.so";
+#endif
     if ((fin = fopen(fileName, "r")))
     {
         fclose(fin);
         khrIcdVendorAdd(fileName);
     }
+/*
     fileName = "/system/lib/libOpenCL.so";
     if ((fin = fopen(fileName, "r")))
     {
@@ -71,6 +76,7 @@ void khrIcdOsVendorsEnumerate(void)
         fclose(fin);
         khrIcdVendorAdd(fileName);
     }
+*/
 #else
     DIR *dir = NULL;
     struct dirent *dirEntry = NULL;
